@@ -8,7 +8,7 @@
 
 #import "KDCycleBannerView.h"
 
-#import <SDWebImage/UIImageView+WebCache.h>
+#import <AFNetworking/UIImageView+AFNetworking.h>
 
 @interface KDCycleBannerView () <UIScrollViewDelegate, UIGestureRecognizerDelegate>
 

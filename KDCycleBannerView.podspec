@@ -8,12 +8,12 @@ Pod::Spec.new do |s|
 
 # Source Info
   s.platform     =  :ios, '5.0'
-  s.source       = { :git => 'https://github.com/kingiol/KDCycleBannerView.git', :tag => '1.0' }
+  s.source       = { :git => 'https://github.com/indevizible/KDCycleBannerView.git', :tag => '1.0' }
   s.source_files = 'KDCycleBannerView/*{h,m}'
 
   s.requires_arc = true
   
 # Pod Dependencies
-  s.dependency 'SDWebImage'
+  s.dependency 'AFNetworking'
 
 end
