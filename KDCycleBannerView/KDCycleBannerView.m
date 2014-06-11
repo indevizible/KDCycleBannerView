@@ -10,6 +10,27 @@
 
 #import <AFNetworking/UIImageView+AFNetworking.h>
 
+@interface KDImageView : UIImageView
+@property (nonatomic,weak) NSObject *observer;
+@end
+
+@implementation KDImageView
+
+-(void)dealloc
+{
+    if (self.observer) {
+        [self removeObserver:self.observer forKeyPath:@"image"];
+    }
+}
+
+-(void)addObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context
+{
+    [super addObserver:observer forKeyPath:keyPath options:options context:context];
+    self.observer = observer;
+}
+
+@end
+
 @interface KDCycleBannerView () <UIScrollViewDelegate, UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) UIScrollView *scrollView;
@@ -51,7 +72,7 @@ static void *kContentImageViewObservationContext = &kContentImageViewObservation
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-
+    
     NSArray *subViews = self.subviews;
     [subViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
@@ -103,7 +124,7 @@ static void *kContentImageViewObservationContext = &kContentImageViewObservation
     if (_datasourceImages.count == 0) {
         //显示默认页，无数据页面
         if ([self.datasource respondsToSelector:@selector(placeHolderImageOfZeroBannerView)]) {
-            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_scrollView.frame), CGRectGetHeight(_scrollView.frame))];
+            KDImageView *imageView = [[KDImageView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_scrollView.frame), CGRectGetHeight(_scrollView.frame))];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
             imageView.backgroundColor = [UIColor clearColor];
             imageView.image = [self.datasource placeHolderImageOfZeroBannerView];
@@ -129,7 +150,7 @@ static void *kContentImageViewObservationContext = &kContentImageViewObservation
     
     for (NSInteger i = 0; i < _datasourceImages.count; i++) {
         CGRect imgRect = CGRectMake(contentWidth * i, 0, contentWidth, contentHeight);
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:imgRect];
+        KDImageView *imageView = [[KDImageView alloc] initWithFrame:imgRect];
         imageView.backgroundColor = [UIColor clearColor];
         imageView.contentMode = [_datasource contentModeForImageIndex:i];
         
@@ -226,7 +247,7 @@ static void *kContentImageViewObservationContext = &kContentImageViewObservation
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == kContentImageViewObservationContext) {
-        UIImageView *imageView = (UIImageView *)object;
+        KDImageView *imageView = (KDImageView *)object;
         UIActivityIndicatorView *activityIndicatorView = (UIActivityIndicatorView *)[imageView viewWithTag:100];
         [activityIndicatorView removeFromSuperview];
         [imageView removeObserver:self forKeyPath:@"image"];
