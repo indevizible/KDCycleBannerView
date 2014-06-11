@@ -29,6 +29,14 @@
     self.observer = observer;
 }
 
+-(void)removeObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath
+{
+    if ([keyPath isEqualToString:@"image"]) {
+        self.observer = nil;
+    }
+    [super removeObserver:observer forKeyPath:keyPath];
+}
+
 @end
 
 @interface KDCycleBannerView () <UIScrollViewDelegate, UIGestureRecognizerDelegate>
